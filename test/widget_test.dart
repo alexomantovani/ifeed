@@ -7,13 +7,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 
 import 'package:ifeed/main.dart';
+import 'package:ifeed/models/local_post_model.dart';
 
 void main() {
+  late Box<LocalPostModel> localPostModelBox;
+
+  setUp(() async {
+    localPostModelBox = await Hive.openBox<LocalPostModel>('local_posts');
+  });
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(localPostBox: localPostModelBox));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
