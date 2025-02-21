@@ -46,8 +46,18 @@ class PostRepository {
 
   Future<PostModel> addPost({required PostModel post}) async {
     try {
-      final response = await client
-          .post(Uri.parse('${Environments.prod}/posts'), body: post.toMap());
+      final body = jsonEncode({
+        "userId": post.userId,
+        "id": post.id,
+        "title": post.title,
+        "body": post.body,
+      });
+
+      final response = await client.post(
+        Uri.parse('${Environments.prod}/posts'),
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
 
       if (response.statusCode == 201) {
         final DataMap? decodedResponse = jsonDecode(response.body);
